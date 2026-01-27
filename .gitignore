@@ -1,1 +1,9 @@
 .env
+/telegram/.env
+
+/n8n-data
+/postgres-data
+/traefik
+out.wav
+out.wav!
+/.venv

@@ -1,0 +1,7 @@
+tunnel: <UUID>
+credentials-file: /etc/cloudflared/<UUID>.json
+
+ingress:
+  - hostname: legislature-points-creating-antibody.trycloudflare.com
+    service: http://n8n:5678
+  - service: http_status:404

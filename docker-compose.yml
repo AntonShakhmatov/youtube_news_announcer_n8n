@@ -1,9 +1,5 @@
 version: "3.9"
 
-networks:
-  web:
-    name: web
-
 services:
   traefik:
     image: traefik:v2.11
@@ -43,7 +39,10 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     networks: [web]
 
-  n8n:
+  n8n:  
+    build:
+      context: .
+      dockerfile: Dockerfile/Dockerfile
     ports:
       - "5678:5678"
     image: n8nio/n8n:latest
@@ -71,4 +70,39 @@ services:
       N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
     volumes:
       - ./n8n-data:/home/node/.n8n
-    networks: [web]
+    networks:
+      - stack_net
+      - web
+      - tunnel
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel run n8n
+    volumes:
+      - ./cloudflared:/etc/cloudflared
+    depends_on:
+      - n8n
+    networks:
+      - tunnel
+
+  piper-api:
+    build: ./piper-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./voices:/voices:ro
+    environment:
+      - PIPER_MODEL=/voices/ru_RU-irina-medium.onnx
+      - PIPER_CONFIG=/voices/ru_RU-irina-medium.onnx.json
+    networks:
+      - stack_net
+      - web
+
+networks:
+  stack_net:
+    external: true
+  tunnel:
+    driver: bridge
+  web:
+    name: web
