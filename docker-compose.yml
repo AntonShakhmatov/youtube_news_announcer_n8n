@@ -45,7 +45,7 @@ services:
       dockerfile: Dockerfile/Dockerfile
     ports:
       - "5678:5678"
-    image: n8nio/n8n:latest
+    image: n8nio/n8n:2.4.6
     container_name: n8n
     restart: unless-stopped
     environment:
@@ -68,8 +68,23 @@ services:
       N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE}
       N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
       N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      NODES_EXCLUDE: "[]" # enable the ExecuteCommand and LocalFileTrigger(disabled dor security reasons)
+
+      N8N_LDAP_ENABLED: "false"
+
+      N8N_RESTRICT_FILE_ACCESS_TO: /files
+      N8N_ENABLE_FS_ACCESS: "true"
+      N8N_PROXY_HOPS: "2"
+
+
+    user: "0:0"
     volumes:
       - ./n8n-data:/home/node/.n8n
+      - ./n8n-data/tmp/audio:/files/audio
+      - ./n8n-data/tmp/video:/files/video
+      - ./n8n-data/tmp/final:/files/final
+      - ./n8n-data/tmp/avatar:/files/avatar
+
     networks:
       - stack_net
       - web

@@ -7,3 +7,5 @@
 out.wav
 out.wav!
 /.venv
+package-lock.json
+/node_modules
