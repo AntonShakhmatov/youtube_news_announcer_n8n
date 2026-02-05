@@ -114,6 +114,24 @@ services:
       - stack_net
       - web
 
+  liveportrait:
+    build: ./liveportrait-api 
+    image: liveportrait-api:latest
+    container_name: liveportrait
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./liveportrait/:/app/
+      - ./n8n-data/tmp/:/files/
+    networks:
+      - stack_net
+      - web
+    device_requests:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+    restart: unless-stopped
+
 networks:
   stack_net:
     external: true

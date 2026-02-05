@@ -118,6 +118,15 @@ sudo docker network connect youtube_announcer_default n8n
 Start a temporary Cloudflare tunnel
 cloudflared tunnel --url http://localhost:5678
 
+sudo docker network create stack_net
+
+Liveportrait Node Execute Command:
+* python inference_animals.py \
+    -s ../n8n-data/tmp/avatar/avatar.jpg \
+    -d assets/examples/driving/wink.pkl \
+    --driving_multiplier 1.75 \
+    --no_flag_stitching
+
 ## Working principle
 
 1. A news message is sent to the Telegram bot.
